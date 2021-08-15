@@ -2,7 +2,6 @@
 This file contains the copy program problem from the book OS-Concepts.
 
 ./copy <file1 Path> <file2 Path> [-c] [-option2]
-
 */
 
 #include<stdio.h>
@@ -14,6 +13,10 @@ This file contains the copy program problem from the book OS-Concepts.
 #include<unistd.h>
 
 
+/*
+Struct to store the file descriptors of both the
+files together.(For convenience)
+*/
 typedef struct both_files{
     int file1;
     int file2;
@@ -24,6 +27,10 @@ static void usage();
 static void error();
 
 /*
+brief: This function opens file with the appropriate permissions.
+        -> File 1 Permissions = Read only
+        -> File 2 Permissions = Truncate and Write only
+    The function takes the struct 'Files' and the path to the files as arguments
 */
 void openFile(Files * copy_files,char * file_one_path, char * file_two_path){
 
@@ -37,22 +44,25 @@ void openFile(Files * copy_files,char * file_one_path, char * file_two_path){
 
 
 /*
-
+brief: This function copies the characters from one file to another one
+       one character at a time.
+    This function does not store the string copied from the first file in a buffer as of now.
 */
 void copyFile(Files * copy_files){
 
     char c;
-    char d;
     while((read(copy_files->file1, &c,1)) != 0){
-        d = c;
-        if((write(copy_files->file2, &d,1)) == -1){
-            error("FUCK");
+        if((write(copy_files->file2, &c,1)) == -1){
+            error("Error copying the file to destination path");
         }
-        //printf("%s",&c);
     }
 }
 
-
+/*
+brief: Should have 3 arguments passed to it.
+    
+    Will be adding support for additional options soon.
+*/
 int main(int argc, char * argv[])
 {
     if(argc < 3){
@@ -64,8 +74,6 @@ int main(int argc, char * argv[])
     Files copy_files;
         
     openFile(&copy_files,argv[1],argv[2]);
-    //printf("%d <-------File Desciptor\n",copy_files.file2);
-    
     copyFile(&copy_files);
     
     close(copy_files.file1);
@@ -74,12 +82,18 @@ int main(int argc, char * argv[])
     return 0;
 }
 
+/*
+brief: Displays proper usage of the command.
+*/
 static void usage()
 {
     fprintf(stderr,"usage: ./copy <FILE1> <FILE2> [-options]");
     exit(-1);
 }
 
+/*
+brief: Displays errors in the code.
+*/
 static void error(char error_msg[]){
     fprintf(stderr,"ERROR: %s with code: %d", error_msg, errno);
     exit(-1);
