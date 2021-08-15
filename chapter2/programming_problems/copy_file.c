@@ -1,7 +1,7 @@
 /*
 This file contains the copy program problem from the book OS-Concepts.
 
-./copy <file1 Path> <file2 Path> [-c] [-option2]
+./copy <file1 Path> <file2 Path> [-option1] [-option2]
 */
 
 #include<stdio.h>
