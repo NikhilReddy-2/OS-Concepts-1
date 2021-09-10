@@ -25,9 +25,17 @@ int allocate_pid(int * pid_map ,int pid){
         return 1;
     }
 }
-void release_pid(int pid);  //Releases a PID
 
-
+//Releases a PID
+void release_pid(int * pid_map,int pid){
+    if(pid_map[pid] != 0){
+        pid_map[pid] = 0;
+        return;
+    }else{
+        printf("PID is not set for : %d",pid);
+        return;
+    }
+}
 
 int main(int argc, char * argv[]){
 
@@ -49,7 +57,11 @@ int main(int argc, char * argv[]){
     }else{
         printf("Could not allocate PID\n");
     }
-
+    printf("PID set: %d\n",pid_map[pid]);
     
+    release_pid(pid_map, pid);
+    
+    printf("PID released: %d\n", pid_map[pid]);
+
     return 0;
 }
